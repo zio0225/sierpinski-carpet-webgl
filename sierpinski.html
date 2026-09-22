@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WebGL Sierpinski Carpet</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; min-height: 100vh; display: grid; place-items: center; background: #101716; color: #f4f1e8; font-family: Arial, sans-serif; }
+    main { width: min(920px, calc(100% - 32px)); padding: 28px; border: 1px solid #38443f; background: #18201d; }
+    h1 { margin: 0 0 8px; font: 500 clamp(32px, 6vw, 64px)/1 Georgia, serif; }
+    p { color: #aeb9b2; }
+    .layout { display: grid; grid-template-columns: minmax(0, 1fr) 220px; gap: 22px; align-items: start; }
+    canvas { display: block; width: 100%; aspect-ratio: 1; background: #0b0e0d; }
+    label { display: block; margin: 12px 0 8px; color: #f4f1e8; font-size: 14px; }
+    output { float: right; color: #f5c85b; font-weight: bold; }
+    input { width: 100%; }
+    input[type="color"] { height: 40px; padding: 2px; }
+    .depth-buttons { display: flex; gap: 8px; margin-bottom: 8px; }
+    .depth-buttons button { width: 38px; height: 30px; border: 1px solid #52645b; background: #26332e; color: #f4f1e8; font-size: 18px; cursor: pointer; }
+    .depth-buttons button:hover { background: #35463e; }
+    @media (max-width: 700px) { .layout { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Sierpinski Carpet</h1>
+    <p>WebGL 프래그먼트 셰이더로 그린 프랙털</p>
+    <div class="layout">
+      <canvas id="canvas" aria-label="Sierpinski Carpet"></canvas>
+      <section>
+        <label for="depth">분할 횟수 <output id="depth-value">4</output></label>
+        <div class="depth-buttons" aria-label="분할 횟수 조절">
+          <button id="decrease" type="button">-</button>
+          <button id="increase" type="button">+</button>
+        </div>
+        <input id="depth" type="range" min="0" max="6" value="4">
+        <label for="color">색상</label>
+        <input id="color" type="color" value="#f5c85b">
+      </section>
+    </div>
+  </main>
+  <script id="vertex-shader" type="x-shader/x-vertex">
+    attribute vec2 position;
+    void main() {
+      gl_Position = vec4(position, 0.0, 1.0);
+    }
+  </script>
+  <script id="fragment-shader" type="x-shader/x-fragment">
+    precision mediump float;
+    uniform vec3 color;
+    void main() {
+      gl_FragColor = vec4(color, 1.0);
+    }
+  </script>
+  <script src="sierpinski.js"></script>
+</body>
+</html>
